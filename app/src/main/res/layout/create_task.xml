@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".tasks.TaskActivity">
+    tools:context=".activities.TaskActivity">
 
     <Spinner
         android:id="@+id/clock_or_timer"
@@ -87,14 +87,6 @@
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <CheckBox
-        android:id="@+id/include_location"
-        app:layout_constraintBottom_toTopOf="@id/alert_power_off"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="Include location in your alerts"
-        />
 
     <CheckBox
         android:id="@+id/alert_power_off"

@@ -1,4 +1,4 @@
-package com.john.v.toot.tasks
+package com.john.v.toot.activities
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -100,7 +100,6 @@ class TaskActivity : AppCompatActivity() {
         )
 
 
-        val task = Task("Task1", 122.0, true, true, "Name")
         val database = TaskDatabase.getDatabase(baseContext)
         val taskDao = database!!.taskDao()
 
@@ -110,6 +109,20 @@ class TaskActivity : AppCompatActivity() {
                 Log.e(TAG , task.name)
             }
         }
+
+        /*
+
+        android:id="@+id/clock_or_timer"
+        android:id="@+id/timer_value_hours"
+        android:id="@+id/timer_value_minutes"
+        android:id="@+id/time_picker"
+        android:id="@+id/alert_power_off"
+        android:id="@+id/alert_low_battery"
+        android:id="@+id/text_content"
+        android:id="@+id/submit_button"
+
+
+         */
 
     }
 
