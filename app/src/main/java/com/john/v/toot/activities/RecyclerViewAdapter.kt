@@ -9,6 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.john.v.toot.R
 import com.john.v.toot.data.Task
 
+
+/**
+ * BUTTON ANIMATION: https://stackoverflow.com/questions/2614545/animate-change-of-view-background-color-on-android
+ */
 class RecyclerViewAdapter(context : Context) : RecyclerView.Adapter<RecyclerViewAdapter.TaskViewHolder>() {
 
 
@@ -28,15 +32,13 @@ class RecyclerViewAdapter(context : Context) : RecyclerView.Adapter<RecyclerView
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-
         val current = tasks?.get(position)
         holder.wordItemView.text = current?.name ?: return
-
     }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
-        var itemView = mInflater.inflate(R.layout.recyclerview_item,
+        var itemView = mInflater.inflate(R.layout.recycler_view_task,
             parent , false)
         return TaskViewHolder(itemView)
     }

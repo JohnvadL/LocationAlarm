@@ -69,13 +69,15 @@ class HomePage : AppCompatActivity() {
          */
 
         val PERMISSION_REQUEST_CODE = 1
+
         if (checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_DENIED) {
             Log.d("permission", "DENIED")
             val permissions = arrayOf(
-                Manifest.permission.READ_EXTERNAL_STORAGE
-                , Manifest.permission.SEND_SMS
-                , Manifest.permission.ACCESS_COARSE_LOCATION
-                , Manifest.permission.ACCESS_FINE_LOCATION
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.SEND_SMS,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.READ_CONTACTS
             )
 
             requestPermissions(permissions, PERMISSION_REQUEST_CODE)
@@ -83,6 +85,7 @@ class HomePage : AppCompatActivity() {
         } else {
             Log.e("permission", "GRANTED")
         }
+
 
 
     }

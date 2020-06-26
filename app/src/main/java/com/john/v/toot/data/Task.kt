@@ -18,6 +18,7 @@ data class Task (
     @ColumnInfo val time:Double,
     @ColumnInfo val lowBattery:Boolean,
     @ColumnInfo val powerOff: Boolean,
-    @ColumnInfo val customMessage: String
+    @ColumnInfo val customMessage: String,
+    @ColumnInfo val jsonContacts: String
 )
 

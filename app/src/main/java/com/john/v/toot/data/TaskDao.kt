@@ -16,7 +16,6 @@ interface TaskDao{
     @Insert
     fun insertAll(vararg  tasks:Task )
 
-
     @Query("SELECT * from task ORDER BY name ASC")
     fun getAllTasksLive(): LiveData<List<Task>>
 

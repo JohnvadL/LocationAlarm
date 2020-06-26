@@ -1,11 +1,14 @@
 package com.john.v.toot.activities
 
+import android.app.Activity
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
+import android.provider.Contacts.People
+import android.provider.ContactsContract
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -17,6 +20,7 @@ import com.john.v.toot.data.TaskDatabase
 import com.john.v.toot.notifications.TimerReceiver
 import kotlinx.android.synthetic.main.create_task_activity.*
 
+
 class TaskActivity : AppCompatActivity() {
 
     lateinit var timerValueHours: NumberPicker
@@ -26,6 +30,7 @@ class TaskActivity : AppCompatActivity() {
     lateinit var clock_mode: ConstraintLayout
     lateinit var timer_mode: ConstraintLayout
 
+    val CONTACT_REQUEST_CODE = 1
 
     val TAG = "TaskActivity"
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,31 +110,11 @@ class TaskActivity : AppCompatActivity() {
         val taskDao = database!!.taskDao()
 
         TaskDatabase.databaseWriteExecutor.execute {
-            val tasks= taskDao.getAllTasks()
-            for (task in tasks ){
-                Log.e(TAG , task.name)
+            val tasks = taskDao.getAllTasks()
+            for (task in tasks) {
+                Log.e(TAG, task.name)
             }
         }
-
-        /*
-
-        android:id="@+id/clock_or_timer"
-        android:id="@+id/timer_value_hours"
-        android:id="@+id/timer_value_minutes"
-        android:id="@+id/time_picker"
-        android:id="@+id/alert_power_off"
-        android:id="@+id/alert_low_battery"
-        android:id="@+id/text_content"
-        android:id="@+id/submit_button"
-
-        @PrimaryKey val name:String,
-        @ColumnInfo val time:Double,
-        @ColumnInfo val lowBattery:Boolean,
-        @ColumnInfo val powerOff: Boolean,
-        @ColumnInfo val customMessage: String
-
-
-         */
 
 
         val time: Double
@@ -137,7 +122,6 @@ class TaskActivity : AppCompatActivity() {
         if (clockOrTimer.selectedItem.toString() == "Clock") {
             time = -1.0
         } else {
-
 
             // get the value in  seconds
             time = timer_value_hours.value.toDouble() * 60 * 60 +
@@ -150,8 +134,9 @@ class TaskActivity : AppCompatActivity() {
                 time,
                 findViewById<CheckBox>(R.id.alert_low_battery).isChecked,
                 findViewById<CheckBox>(R.id.alert_power_off).isChecked,
-                findViewById<EditText>(R.id.custom_message).text.toString()
-                )
+                findViewById<EditText>(R.id.custom_message).text.toString(),
+                ""
+            )
 
             // if there are errors in th
             TaskDatabase.databaseWriteExecutor.execute {
@@ -160,6 +145,51 @@ class TaskActivity : AppCompatActivity() {
             }
             finish()
         }
+
+
+        val contactButton: Button = findViewById(R.id.add_contact_button)
+        val contactIntent = Intent(Intent.ACTION_PICK, People.CONTENT_URI)
+
+
+        contactButton.setOnClickListener {
+            startActivityForResult(contactIntent, 1)
+
+        }
+
+
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            CONTACT_REQUEST_CODE -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    var contactData = data?.getData()
+                    var c = managedQuery(contactData, null, null, null, null);
+
+                    if (c.moveToFirst()) {
+                        val nameContact =
+                            c.getString(c.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME))
+
+                        val id = c.getString(c.getColumnIndexOrThrow(ContactsContract.Contacts._ID))
+
+                        val phones = contentResolver.query(
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            null,
+                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id,
+                            null,
+                            null
+                        )
+                        phones!!.moveToFirst()
+                        val cNumber =
+                            phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                        Toast.makeText(applicationContext, cNumber, Toast.LENGTH_SHORT).show()
+
+                        Log.e("ADDED_CONTACT", nameContact + cNumber)
+                    }
+                }
+            }
+
+        }
+    }
 }
