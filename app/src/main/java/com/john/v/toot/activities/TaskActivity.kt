@@ -15,6 +15,7 @@ import com.john.v.toot.R
 import com.john.v.toot.data.Task
 import com.john.v.toot.data.TaskDatabase
 import com.john.v.toot.notifications.TimerReceiver
+import kotlinx.android.synthetic.main.create_task_activity.*
 
 class TaskActivity : AppCompatActivity() {
 
@@ -31,7 +32,7 @@ class TaskActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
 
-        setContentView(R.layout.create_task)
+        setContentView(R.layout.create_task_activity)
         // Switch between timer-based and clock-based
         val clockOrTimer = findViewById<Spinner>(R.id.clock_or_timer)
         val clockTimerList = arrayListOf<String>("Clock", "Timer")
@@ -121,9 +122,44 @@ class TaskActivity : AppCompatActivity() {
         android:id="@+id/text_content"
         android:id="@+id/submit_button"
 
+        @PrimaryKey val name:String,
+        @ColumnInfo val time:Double,
+        @ColumnInfo val lowBattery:Boolean,
+        @ColumnInfo val powerOff: Boolean,
+        @ColumnInfo val customMessage: String
+
 
          */
 
+
+        val time: Double
+
+        if (clockOrTimer.selectedItem.toString() == "Clock") {
+            time = -1.0
+        } else {
+
+
+            // get the value in  seconds
+            time = timer_value_hours.value.toDouble() * 60 * 60 +
+                    timer_value_minutes.value.toDouble() * 60
+        }
+        val submitButtom = findViewById<Button>(R.id.submit_button)
+        submitButtom.setOnClickListener {
+            val task = Task(
+                findViewById<EditText>(R.id.task_name).text.toString(),
+                time,
+                findViewById<CheckBox>(R.id.alert_low_battery).isChecked,
+                findViewById<CheckBox>(R.id.alert_power_off).isChecked,
+                findViewById<EditText>(R.id.custom_message).text.toString()
+                )
+
+            // if there are errors in th
+            TaskDatabase.databaseWriteExecutor.execute {
+                val db = TaskDatabase.getDatabase(baseContext)
+                db?.taskDao()?.insertAll(task)
+            }
+            finish()
+        }
     }
 
 }

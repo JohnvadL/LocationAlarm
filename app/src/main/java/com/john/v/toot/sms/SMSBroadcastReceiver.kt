@@ -13,10 +13,14 @@ import android.util.Log
  * Class to keep track of the messages
  */
 class SMSBroadcastReceiver : BroadcastReceiver() {
+
+
+
     val SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED"
     val TAG = "SMS Broodcast Receiver"
     override fun onReceive(context: Context?, intent: Intent?) {
 
+        Log.e(TAG, "RECEIVED")
 
         if (intent?.getAction() === SMS_RECEIVED) {
             val bundle = intent.getExtras()
@@ -27,7 +31,7 @@ class SMSBroadcastReceiver : BroadcastReceiver() {
                     messages[i] = SmsMessage.createFromPdu(pdus[i] as ByteArray)
                 }
                 if (messages.size > -1) {
-                    Log.i(TAG, "Message recieved: " + messages[0]?.messageBody)
+                    Log.e(TAG, "Message recieved: " + messages[0]?.messageBody)
                 }
             }
         }
