@@ -64,4 +64,8 @@ dependencies {
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:$archLifecycleVersion"
 
 
+    implementation 'com.google.code.gson:gson:2.8.6'
+
+
+
 }

@@ -19,6 +19,8 @@ data class Task (
     @ColumnInfo val lowBattery:Boolean,
     @ColumnInfo val powerOff: Boolean,
     @ColumnInfo val customMessage: String,
-    @ColumnInfo val jsonContacts: String
+    @ColumnInfo val jsonContacts: String,
+    @ColumnInfo val isActive: Boolean,
+    @ColumnInfo val isTimer: Boolean
 )
 

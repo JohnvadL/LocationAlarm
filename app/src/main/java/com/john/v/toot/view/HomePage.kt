@@ -1,4 +1,4 @@
-package com.john.v.toot.activities
+package com.john.v.toot.view
 
 import android.Manifest
 import android.content.Intent
@@ -11,9 +11,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.john.v.toot.R
 import com.john.v.toot.data.Task
+import com.john.v.toot.data.TaskDatabase
 import com.john.v.toot.data.TaskViewModel
+import com.john.v.toot.view.task.TaskActivity
 
 
 /**
@@ -86,23 +90,21 @@ class HomePage : AppCompatActivity() {
             Log.e("permission", "GRANTED")
         }
 
+        TaskDatabase.databaseWriteExecutor.execute {
+            val tasks = TaskDatabase.getDatabase(baseContext)!!.taskDao().getAllTasks()
 
+            for (task in tasks) {
+                val itemType = object : TypeToken<List<String>>() {}.type
 
-    }
+                val contacts = Gson().fromJson<ArrayList<String>>(task.jsonContacts, itemType)
 
-/*    fun getGrantedPermissions(appPackage: String): List<String> {
-        val granted = ArrayList<String>()
-        try {
-            val pi = packageManager.getPackageInfo(appPackage, PackageManager.GET_PERMISSIONS)
-            for (i in pi.requestedPermissions.indices) {
-                if (pi.requestedPermissionsFlags[i] and PackageInfo.REQUESTED_PERMISSION_GRANTED != 0) {
-                    granted.add(pi.requestedPermissions[i])
+                if (contacts != null) {
+                    for (contact in contacts) {
+                        Log.e("HomePage ", "NAME:" + contact.split(":")[0])
+                        Log.e("HomePage", "Phone Number:" + contact.split(":")[1])
+                    }
                 }
             }
-        } catch (e: Exception) {
         }
-
-        return granted
-    }*/
-
+    }
 }

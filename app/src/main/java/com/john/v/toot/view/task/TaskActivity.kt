@@ -1,12 +1,8 @@
-package com.john.v.toot.activities
+package com.john.v.toot.view.task
 
 import android.app.Activity
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.SystemClock
 import android.provider.Contacts.People
 import android.provider.ContactsContract
 import android.util.Log
@@ -14,10 +10,12 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import com.john.v.toot.R
 import com.john.v.toot.data.Task
 import com.john.v.toot.data.TaskDatabase
-import com.john.v.toot.notifications.TimerReceiver
 import kotlinx.android.synthetic.main.create_task_activity.*
 
 
@@ -26,6 +24,7 @@ class TaskActivity : AppCompatActivity() {
     lateinit var timerValueHours: NumberPicker
     lateinit var timerValueMinutes: NumberPicker
     lateinit var alarmTimePicker: TimePicker
+    lateinit var contactAdapter: ContactsAdapter
 
     lateinit var clock_mode: ConstraintLayout
     lateinit var timer_mode: ConstraintLayout
@@ -49,7 +48,7 @@ class TaskActivity : AppCompatActivity() {
 
         clock_mode = findViewById(R.id.clock_mode)
         timer_mode = findViewById(R.id.timer_mode)
-
+        alarmTimePicker = findViewById(R.id.time_picker)
 
         clockOrTimer.adapter = adapter
 
@@ -85,27 +84,6 @@ class TaskActivity : AppCompatActivity() {
         timerValueMinutes.minValue = 0
         timerValueMinutes.maxValue = 59
 
-        // Once timer is done , add location services
-
-        /**
-         * Alarm Manager Tests
-         *
-         */
-
-        val intent = Intent(this, TimerReceiver::class.java)
-
-        val pendingIntent =
-            PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-
-
-        val alarmManager =
-            applicationContext.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
-        alarmManager?.set(
-            AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime() + 2000,
-            pendingIntent
-        )
-
-
         val database = TaskDatabase.getDatabase(baseContext)
         val taskDao = database!!.taskDao()
 
@@ -117,25 +95,40 @@ class TaskActivity : AppCompatActivity() {
         }
 
 
-        val time: Double
-
-        if (clockOrTimer.selectedItem.toString() == "Clock") {
-            time = -1.0
-        } else {
-
-            // get the value in  seconds
-            time = timer_value_hours.value.toDouble() * 60 * 60 +
-                    timer_value_minutes.value.toDouble() * 60
-        }
         val submitButtom = findViewById<Button>(R.id.submit_button)
         submitButtom.setOnClickListener {
+
+
+            var contacts = ArrayList<String>()
+
+            contactAdapter.contacts.forEach {
+                contacts.add(it.first + ":" + it.second)
+            }
+
+
+            val contactsJSON = Gson().toJson(contacts)
+
+
+            val time: Double
+
+            if (clockOrTimer.selectedItem.toString() == "Clock") {
+                time = alarmTimePicker.hour + (alarmTimePicker.minute.toDouble()) / 100
+            } else {
+                // get the value in  seconds
+                time = timer_value_hours.value.toDouble() * 60 * 60 +
+                        timer_value_minutes.value.toDouble() * 60
+            }
+
+
             val task = Task(
                 findViewById<EditText>(R.id.task_name).text.toString(),
                 time,
                 findViewById<CheckBox>(R.id.alert_low_battery).isChecked,
                 findViewById<CheckBox>(R.id.alert_power_off).isChecked,
                 findViewById<EditText>(R.id.custom_message).text.toString(),
-                ""
+                contactsJSON,
+                false,
+                clockOrTimer.selectedItem.toString() == "Timer"
             )
 
             // if there are errors in th
@@ -153,19 +146,26 @@ class TaskActivity : AppCompatActivity() {
 
         contactButton.setOnClickListener {
             startActivityForResult(contactIntent, 1)
-
         }
 
+        contactAdapter = ContactsAdapter()
+        val contactRecycler = findViewById<RecyclerView>(R.id.contact_recycler_view)
+        contactRecycler.adapter = contactAdapter
+        contactRecycler.layoutManager = LinearLayoutManager(baseContext)
 
     }
 
+
+    /**
+     * Parse the contact information once its been received
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             CONTACT_REQUEST_CODE -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    var contactData = data?.getData()
-                    var c = managedQuery(contactData, null, null, null, null);
+                    val contactData = data?.data
+                    val c = managedQuery(contactData, null, null, null, null)
 
                     if (c.moveToFirst()) {
                         val nameContact =
@@ -186,10 +186,10 @@ class TaskActivity : AppCompatActivity() {
                         Toast.makeText(applicationContext, cNumber, Toast.LENGTH_SHORT).show()
 
                         Log.e("ADDED_CONTACT", nameContact + cNumber)
+                        contactAdapter.addContact(nameContact, cNumber)
                     }
                 }
             }
-
         }
     }
 }
