@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.john.v.toot.R
+import com.john.v.toot.alarms.AlarmManagerExtended
 import com.john.v.toot.data.Task
 import com.john.v.toot.data.TaskDatabase
 
@@ -15,8 +16,8 @@ import com.john.v.toot.data.TaskDatabase
 /**
  * BUTTON ANIMATION: https://stackoverflow.com/questions/2614545/animate-change-of-view-background-color-on-android
  */
-class RecyclerViewAdapter(context: Context) :
-    RecyclerView.Adapter<RecyclerViewAdapter.TaskViewHolder>() {
+class TaskAdapter(context: Context) :
+    RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
 
     private var mInflater: LayoutInflater = LayoutInflater.from(context)
@@ -60,6 +61,12 @@ class RecyclerViewAdapter(context: Context) :
                         current.isTimer
                     )
                 )
+            }
+
+            if (!current.isActive){
+                AlarmManagerExtended.startTimer(current, context)
+            } else {
+                AlarmManagerExtended.cancelTimer(current, context)
             }
         }
 

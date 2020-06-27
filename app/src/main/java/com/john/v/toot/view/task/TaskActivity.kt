@@ -66,16 +66,16 @@ class TaskActivity : AppCompatActivity() {
             ) {
                 if (position == 0) {
                     clock_mode.visibility = View.VISIBLE
-                    timer_mode.visibility = View.INVISIBLE
+                    timer_mode.visibility = View.GONE
                 } else {
-                    clock_mode.visibility = View.INVISIBLE
+                    clock_mode.visibility = View.GONE
                     timer_mode.visibility = View.VISIBLE
                 }
             }
         }
 
 
-        timerValueHours = findViewById(R.id.timer_value_hours)
+        timerValueHours = findViewById(R.id .timer_value_hours)
         timerValueHours.minValue = 0
         timerValueHours.maxValue = 23
 

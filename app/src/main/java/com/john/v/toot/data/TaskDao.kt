@@ -20,6 +20,10 @@ interface TaskDao{
     fun getAllTasksLive(): LiveData<List<Task>>
 
 
+    @Query("Select * from task WHERE name = :taskName")
+    fun getTask(taskName :String) : Task
+
+
     @Update
     fun updateTasks(vararg tasks:Task )
 

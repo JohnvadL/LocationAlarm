@@ -28,7 +28,7 @@ class HomePage : AppCompatActivity() {
 
     lateinit var createTaskButton: Button
     lateinit var taskViewModel: TaskViewModel
-    lateinit var recyclerViewadapter: RecyclerViewAdapter
+    lateinit var recyclerViewadapter: TaskAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +46,7 @@ class HomePage : AppCompatActivity() {
 
 
         val recyclerViewMain = findViewById<RecyclerView>(R.id.recycler_view_main)
-        recyclerViewadapter = RecyclerViewAdapter(baseContext)
+        recyclerViewadapter = TaskAdapter(baseContext)
         recyclerViewMain.adapter = recyclerViewadapter
         recyclerViewMain.layoutManager = LinearLayoutManager(baseContext)
 

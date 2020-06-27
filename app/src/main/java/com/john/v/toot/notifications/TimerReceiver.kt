@@ -9,8 +9,10 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.room.Room
 import com.john.v.toot.R
+import com.john.v.toot.alarms.AlarmConstants
+import com.john.v.toot.data.Task
+import com.john.v.toot.data.TaskDatabase
 
 class TimerReceiver : BroadcastReceiver() {
 
@@ -33,10 +35,30 @@ class TimerReceiver : BroadcastReceiver() {
         with(NotificationManagerCompat.from(context)) {
             // notificationId is a unique int for each notification that you must define
             notify(1, builder.build())
-            System.out.println("TEST")
         }
 
 
+
+
+        TaskDatabase.databaseWriteExecutor.execute {
+            val current = TaskDatabase.getDatabase(context)?.taskDao()?.getTask(
+                intent?.extras?.get(AlarmConstants.EXTRA_NAME) as String
+            )
+
+
+            TaskDatabase.getDatabase(context)?.taskDao()?.updateTasks(
+                Task(
+                    current!!.name,
+                    current.time,
+                    current.lowBattery,
+                    current.powerOff,
+                    current.customMessage,
+                    current.jsonContacts,
+                    !current.isActive,
+                    current.isTimer
+                )
+            )
+        }
 
     }
 
