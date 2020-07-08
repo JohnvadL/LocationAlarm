@@ -19,19 +19,22 @@ import com.john.v.toot.data.TaskDatabase
 import kotlinx.android.synthetic.main.create_task_activity.*
 
 
-class TaskActivity : AppCompatActivity() {
+class CreateTaskActivity : AppCompatActivity() {
 
     lateinit var timerValueHours: NumberPicker
     lateinit var timerValueMinutes: NumberPicker
     lateinit var alarmTimePicker: TimePicker
     lateinit var contactAdapter: ContactsAdapter
 
+
+
+
     lateinit var clock_mode: ConstraintLayout
     lateinit var timer_mode: ConstraintLayout
 
     val CONTACT_REQUEST_CODE = 1
 
-    val TAG = "TaskActivity"
+    val TAG = "CreateTaskActivity"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -49,7 +52,7 @@ class TaskActivity : AppCompatActivity() {
         clock_mode = findViewById(R.id.clock_mode)
         timer_mode = findViewById(R.id.timer_mode)
         alarmTimePicker = findViewById(R.id.time_picker)
-
+        alarmTimePicker.setIs24HourView(true)
         clockOrTimer.adapter = adapter
 
         // http://www.google.com/maps/place/49.46800006494457,17.11514008755796
@@ -128,7 +131,8 @@ class TaskActivity : AppCompatActivity() {
                 findViewById<EditText>(R.id.custom_message).text.toString(),
                 contactsJSON,
                 false,
-                clockOrTimer.selectedItem.toString() == "Timer"
+                clockOrTimer.selectedItem.toString() == "Timer",
+                null
             )
 
             // if there are errors in th
@@ -153,6 +157,17 @@ class TaskActivity : AppCompatActivity() {
         contactRecycler.adapter = contactAdapter
         contactRecycler.layoutManager = LinearLayoutManager(baseContext)
 
+
+        // Repeat Behavior
+/*
+        val repeatCountSpinner = findViewById<Spinner>(R.id.repeat_frequency_spinners)
+        val repeatIntervals = arrayListOf("5 mins", "10 mins", "15 mins", "30 mins")
+        val repeatAdapater = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_dropdown_item,
+            repeatIntervals
+        )
+        repeatCountSpinner.adapter = repeatAdapater*/
     }
 
 

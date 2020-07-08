@@ -1,26 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="#FFFFFF"
     tools:context=".view.HomePage">
 
 
-    <Button
-        android:id="@+id/create_task_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:text="new_activity_button" />
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scrollbars="none"
+        android:fillViewport="true">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_main"
-        tools:listitem="@layout/recycler_view_task"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="1dp" />
+        <RelativeLayout
+            android:id="@+id/container"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.scwang.wave.MultiWaveHeader
+            android:id="@+id/wave_header"
+            android:layout_width="match_parent"
+            android:layout_height="500dp" />
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
+            android:background="@drawable/transparent_logo" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wave_header"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="-260dp"
+            android:fontFamily="@font/coolvetica"
+            android:text="ACTIVE"
+            android:textColor="#FFFFFF"
+            android:id="@+id/active_or_inactive"
+            android:textSize="30dp" />
+
+        <Button
+            android:id="@+id/create_task_button"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_below="@id/wave_header"
+            android:layout_centerInParent="true"
+            android:background="#FFFFFF"
+            android:fontFamily="@font/coolvetica"
+            android:text="Create Guard"
+            android:textColor="#1799b5"
+            android:textSize="25dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginTop="30dp"
+            android:id="@+id/recycler_view_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/create_task_button"
+            tools:layout_editor_absoluteX="1dp"
+            tools:layout_editor_absoluteY="1dp"
+            tools:listitem="@layout/recycler_view_task" />
+
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

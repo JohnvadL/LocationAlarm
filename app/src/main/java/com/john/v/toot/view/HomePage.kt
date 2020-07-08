@@ -3,9 +3,14 @@ package com.john.v.toot.view
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.location.Location
+import android.location.LocationListener
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -13,11 +18,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.john.v.toot.BuddySystemApplication
 import com.john.v.toot.R
 import com.john.v.toot.data.Task
 import com.john.v.toot.data.TaskDatabase
 import com.john.v.toot.data.TaskViewModel
-import com.john.v.toot.view.task.TaskActivity
+import com.john.v.toot.view.task.CreateTaskActivity
+import com.scwang.wave.MultiWaveHeader
 
 
 /**
@@ -31,14 +38,33 @@ class HomePage : AppCompatActivity() {
     lateinit var recyclerViewadapter: TaskAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        setTheme(R.style.SplashTheme)
+
+
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_page)
 
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN)
+
+
+        var waveHeader: MultiWaveHeader = findViewById(R.id.wave_header)
+
+/*
+        waveHeader.velocity = 0.009.toFloat()
+        waveHeader.progress = 1.toFloat()
+        waveHeader.gradientAngle = 45
+        waveHeader.startColor = Color.parseColor("#1799b5")
+        waveHeader.closeColor = Color.parseColor("#1799b5")
+
+*/
 
         createTaskButton = findViewById(R.id.create_task_button)
 
         createTaskButton.setOnClickListener {
-            val intent = Intent(this@HomePage, TaskActivity::class.java)
+            val intent = Intent(this@HomePage, CreateTaskActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             startActivity(intent)
             overridePendingTransition(R.anim.slide_up_info, R.anim.no_change)
@@ -56,7 +82,30 @@ class HomePage : AppCompatActivity() {
 
         taskViewModel.allTasks.observe(this,
             Observer<List<Task>> { tasks ->
+                var flag = true
                 // Update the cached copy of the words in the adapter.
+                for (task in tasks) {
+
+                    if(task.isActive){
+                        waveHeader.velocity = 5.toFloat()
+
+                        waveHeader.startColor = Color.parseColor("#FC3158")
+                        waveHeader.closeColor = Color.parseColor("#FC3158")
+                        waveHeader.isRunning()
+                        flag = false
+                        findViewById<TextView>(R.id.active_or_inactive).text = "ACTIVE"
+                    }
+                }
+
+                if (flag){
+
+                    waveHeader.velocity = 0.009.toFloat()
+                    waveHeader.startColor = Color.parseColor("#1799b5")
+                    waveHeader.closeColor = Color.parseColor("#1799b5")
+                    findViewById<TextView>(R.id.active_or_inactive).text = "INACTIVE"
+
+
+                }
                 (recyclerViewadapter.setTask(tasks))
             })
 
@@ -86,6 +135,9 @@ class HomePage : AppCompatActivity() {
 
             requestPermissions(permissions, PERMISSION_REQUEST_CODE)
 
+            BuddySystemApplication.updateLocation(baseContext)
+
+
         } else {
             Log.e("permission", "GRANTED")
         }
@@ -106,5 +158,31 @@ class HomePage : AppCompatActivity() {
                 }
             }
         }
+
     }
+
+
+    class TestListener : LocationListener {
+        override fun onProviderEnabled(provider: String?) {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+
+        override fun onProviderDisabled(provider: String?) {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+
+        override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+            Log.e("NotificationsReceiver", "status changed")
+        }
+
+        override fun onLocationChanged(p0: Location?) {
+            Log.e(
+                "TimerReceiever",
+                "location changed" + p0?.latitude.toString() + ":" + p0?.longitude.toString()
+            )
+
+        }
+
+    }
+
 }

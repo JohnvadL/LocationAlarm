@@ -1,27 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+
+
+    <TextView
+        android:id="@+id/activation_time"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/rounded_corners_red"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_below="@id/relative_layout"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        android:id="@+id/relative_layout"
+        android:background="@drawable/rounded_corners">
+
+
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_marginLeft="15dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="5dp"
+            android:id="@+id/start_timer_switch"
+            />
+
+        <ImageView
+            android:id="@+id/drawable_clock"
+            android:layout_width="30dp"
+            android:layout_height="28dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="40dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/timer"
+            />
+
+        <TextView
+            android:id="@+id/time_remaining_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="43dp"
+            android:textColor="@color/light_grey"
+            android:textSize="15sp"
+            android:text ="30 minutes"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/drawable_clock"
+            android:fontFamily="@font/virgula"
+            />
+
+
+
+        <ImageView
+            android:id="@+id/drawable_contact"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_below="@id/drawable_clock"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/contact"
+            />
+
+        <TextView
+            android:id="@+id/contacts_textView"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_height="wrap_content"
+            android:text ="John, Larry &amp; More"
+            android:layout_marginTop="14dp"
+            android:textColor="@color/light_grey"
+            android:textSize="15sp"
+            android:layout_below="@id/drawable_clock"
+            android:layout_toRightOf="@id/drawable_contact"
+            android:fontFamily="@font/virgula"
+            />
+
+
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/light_grey"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/horizontal_divider"
+            android:visibility="invisible"
+            android:layout_marginBottom="110dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:id="@+id/NOTE_TITLE"
+            android:text="Note"
+            android:textColor="@color/light_grey"
+            android:layout_marginBottom="-10dp"
+            android:layout_centerHorizontal="true"
+            android:background="@color/white"
+            android:fontFamily="@font/coolvetica"
+            android:layout_alignBottom="@id/horizontal_divider"
+            android:textSize="21dp"
+            />
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="20dp"
+            android:paddingRight="10dp"
+            android:paddingTop="15dp"
+            android:textSize="15sp"
+            android:fontFamily="@font/virgula"
+            android:layout_below="@id/NOTE_TITLE"
+            android:textColor="@color/light_grey"
+            android:id="@+id/note_preview"
+            />
+
+
+    </RelativeLayout>
+
+
 
     <TextView
         android:id="@+id/textView"
-        style="@style/word_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/holo_blue_light" />
-
-
-    <Button
-        android:id="@+id/start_timer"
+        android:textSize="30sp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="30dp"
+        android:background="@color/white"
+        android:textColor="@color/colorPrimary"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="20dp"
+        android:fontFamily="@font/coolvetica"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="start text"
-        />
+        android:layout_height="wrap_content" />
 
 
-
-
-
-
-</LinearLayout>
+</RelativeLayout>
